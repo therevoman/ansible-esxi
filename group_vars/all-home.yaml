@@ -1,0 +1,23 @@
+---
+# vars for home
+dns_domain: "revoweb.home"
+name_servers:
+  - 10.2.2.1
+  - 192.168.20.1
+
+ntp_servers:
+  - 10.2.2.1
+  - 192.168.20.1
+
+#vms_to_autostart:
+#  eagle-m0:
+#    order: 1
+#  hawk-m0:
+#    order: 2
+#  falcon-m0:
+
+# autostart only listed VMs
+autostart_only_listed: true
+
+# really ok with defaults: "log." + dns_domain
+syslog_host: "syslog-ng.revoweb.home:514"

@@ -39,6 +39,7 @@
   with_dict: "{{ vms_to_autostart }}"
   when:
     - vms_to_autostart is defined
+    - vms_to_autostart | length > 0
     - item.key in vm_info.id_by_vm
     # optional, to simplify startup
     - item.key not in vm_info.start_by_vm

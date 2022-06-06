@@ -12,8 +12,11 @@
 
 # all hosts: include sites here
 [all.esxi:children]
-all-m0
+all-home
 
 # one site with specific vars in group_vars
-[all-m0]
-cage     ansible_host=cage.m0.maxidom.ru
+[all-home]
+esxi0	ansible_host=esxi0.revoweb.home
+esxi1	ansible_host=esxi1.revoweb.home
+esxi2	ansible_host=esxi2.revoweb.home
+

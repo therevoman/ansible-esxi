@@ -25,12 +25,17 @@
     dest: '/etc/pam.d/passwd'
     regexp: "^password +requisite.*pam_passwdqc"
     line:    "password   requisite    /lib/security/$ISA/pam_passwdqc.so retry=3 min=8,8,8,8,8"
+  when: false
+
+#- name: Always use quote filter to make sure your variables are safe to use with shell
+#  debug:
+#    msg: "{{ lookup('pipe', 'getent passwd ' + myuser | quote ) }}"
 
 - name: (users) add missed users
   command: >
      esxcli system account add --id={{ item.key }} --description='{{ item.value.desc }}'
-     -p={{ lookup('password', 'creds/' + inventory_hostname + '.' + item.key + '.pass.out length=10 chars=ascii_letters,digits') }}
-     -c={{ lookup('password', 'creds/' + inventory_hostname + '.' + item.key + '.pass.out length=10 chars=ascii_letters,digits') }}
+     -p={{ lookup('pipe', 'keybase kvstore api -m ' + "'" + '{"method": "get", "params": {"options": {"namespace": "esxi", "entryKey": "nrevo"}}}' + "'" + ' | jq -r ".result.entryValue" ' ) }}
+     -c={{ lookup('pipe', 'keybase kvstore api -m ' + "'" + '{"method": "get", "params": {"options": {"namespace": "esxi", "entryKey": "nrevo"}}}' + "'" + ' | jq -r ".result.entryValue" ' ) }}
   with_dict: "{{ esxi_local_users }}"
   register: added_users
   when: item.key not in users
@@ -45,10 +50,10 @@
   when: item.changed
   # no_log: true
 
-- name: (users) print out temp passwords for added users
-  debug:
-    msg: "temp password for {{ item }}: {{ lookup('password', 'creds/' + inventory_hostname + '.' + item + '.pass.out')  }}"
-  with_items: "{{ added_users.results | selectattr('changed') | map(attribute='item') | map(attribute='key') | list }}"
+#- name: (users) print out temp passwords for added users
+#  debug:
+#    msg: "temp password for {{ item }}: {{ lookup('password', 'creds/' + inventory_hostname + '.' + item + '.pass.out')  }}"
+#  with_items: "{{ added_users.results | selectattr('changed') | map(attribute='item') | map(attribute='key') | list }}"
 
 - name: (users) modify settings for changed users
   command: "esxcli system account set --id={{ item.key }} --description='{{ esxi_local_users[item.key]['desc'] }}'"
@@ -73,11 +78,11 @@
   shell: "/etc/rc.local.d/local.sh"
   when: genkeys_script_res.changed
 
-- name: (users) copy profile
-  copy:
-    src:  "profile.local"
-    dest: "/etc/profile.local"
-    mode: "u=rwx,og=r"
+#- name: (users) copy profile
+#  copy:
+#    src:  "profile.local"
+#    dest: "/etc/profile.local"
+#    mode: "u=rwx,og=r"
 
 - name: (users) check ssh timeout
   shell: "esxcli system settings advanced list -o /UserVars/ESXiShellInteractiveTimeOut | awk '/^   Int Value:/ {print $3}'"

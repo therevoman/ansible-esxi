@@ -1,12 +1,12 @@
 ---
-#esxi_serial: "XXXXX-XXXXX-XXXX-XXXXX-XXXXX"
+esxi_serial: "3M2CK-VTJ43-K81G8-09CH6-1JDN4"
 
 # host names are in fact ignored by esxi; better use ip here
 esxi_local_users:
-  "alex":
-    desc: "Alexey Vekshin"
+  "nrevo":
+    desc: "Nate Revo"
     pubkeys:
-      - name:  "alex-mp"
+      - name:  "nrevo"
         hosts: "10.1.11.6,alex-mp.m1.maxidom.ru"
 
 # same default port groups for all for now
@@ -18,13 +18,46 @@ esxi_local_users:
 esxi_portgroups:
   # bare minimum
   "vMotion":
-    tag: 241
-  "all-tagged":
+    tag: 41
+    vmk: "vmk1"
+  "Provisioning":
+    tag: 42
+    vmk: "vmk2"
+  "Storage":
+    tag: 10
+    vmk: "vmk3"
+  "Infra":
+    tag: 20
+    vmk: "vmk4"
+  "UntrustedInfra":
+    tag: 29
+    vmk: "vmk5"
+  "Proxied-nodhcp":
+    tag: 45
+    vmk: "vmk6"
+  "Proxied":
+    tag: 46
+    vmk: "vmk7"
+  "MITM":
+    tag: 47
+    vmk: "vmk8"
+  "nodhcp":
+    tag: 48
+    vmk: "vmk9"
+  "VM Network":
+    tag: 49
+    vmk: "vmk10"
+  "vwm-disconnected":
+    tag: 96
+    vmk: "vmk11"
+  "External":
+    tag: 8
+    vmk: "vmk12"
+  "Trunk":
     tag: 4095
-  "adm-srv":
-    tag: 210
+    vmk: "vmk30"
 
 # install host client
 vib_list:
-  - name: esx-ui
-    url: "http://www-distr.m1.maxidom.ru/suse_distr/iso/esxui-signed-6360286.vib"
+#  - name: esx-ui
+#    url: "http://www-distr.m1.maxidom.ru/suse_distr/iso/esxui-signed-6360286.vib"

@@ -19,15 +19,21 @@
                     | to_dict('name') }}"
     pgmod: "esxcli network vswitch standard portgroup"
 
+- debug:
+    var: portgroups
+
 - name: (network) add missed portgroups
   command: "{{ pgmod }} add -p '{{ item.key }}' -v {{ item.value.vswitch | d(vswitch_def) }}"
   with_dict: "{{ esxi_portgroups }}"
   when: item.key not in portgroups
 
+- debug:
+    var: portgroups.keys() | list
+
 - name: (network) check that deleted portgroups are free from clients
   assert:
-    that: "(portgroups[item].clients|int == 0)"
-  with_items: "{{ portgroups.keys() }}"
+    that: "(portgroups[{{ item }}].clients|int == 0)"
+  with_items: "{{ portgroups.keys() | list }}"
   when: item not in esxi_portgroups
 
 - name: (network) delete extra portgroups
@@ -77,7 +83,8 @@
     - name: (network) calculate vmotion addr
       set_fact:
         # be careful not to include "." in RE: \1 became \1241 :)
-        vmotion_addr: "{{ ip_by_nic['vmk0'].address | regex_replace('^(\\d+\\.\\d+)\\.\\d+', '\\1.' + (vmotion_subnet_number|string)) }}"
+        #vmotion_addr: "{{ ip_by_nic['vmk0'].address | regex_replace('^(\\d+\\.\\d+)\\.\\d+', '\\1.' + (vmotion_subnet_number|string)) }}"
+        vmotion_addr: "{{ vmotion_ip_address }}"
 
     - name: (network) set ip address on vMotion interface
       command: "esxcli network ip interface ipv4 set -i {{ vmotion_iface_name }} -I {{ vmotion_addr }} -N 255.255.255.0 -t static"

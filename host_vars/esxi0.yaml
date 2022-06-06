@@ -1,0 +1,46 @@
+# disable Skyline Health Service
+disable_slpd: true
+
+# local datastores to create -- esxcli storage core path list
+local_datastores:
+  "vmhba0:C0:T2:L0": "esxi0datastore"
+create_datastores: true
+
+# minimal for cage
+esxi_portgroups:
+  vMotion:    { tag:  41 }
+  Provisioning:    { tag:  42 }
+  Storage: { tag:  10 }
+  Infra: { tag:  20 }
+  UntrustedInfra: { tag:  29 }
+  Proxied-nodhcp: { tag:  45 }
+  Proxied: { tag:  46 }
+  MITM: { tag:  47 }
+  nodhcp: { tag:  48 }
+  "VM Network": { tag:  49 }
+  vmw-disconnected: { tag:  96 }
+  External: { tag:  8 }
+  Trunk: { tag:  4095 }
+
+# users: as usual
+esxi_local_users:
+  "nrevo":
+    desc: "Nate Revo"
+#    pubkeys:
+#      - name:  "alex-mp"
+#        hosts: "10.1.11.6,alex-mp"
+#      - name:  "alex-mbp"
+#        hosts: "alex-mbp15*,alex-mp.m1.maxidom.ru"
+
+# newer host client
+vib_list:
+#  - name: esx-ui
+#    url: "http://www-distr.m1.maxidom.ru/suse_distr/iso/esxui-signed-7119706.vib"
+
+# default clone source
+#src_vm_name: phoenix11-test
+#src_vm_server: cage7
+#src_vm_vol:    infra.data
+#dst_vm_vol:    nest1-m1-storage1
+#dst_vm_net:    adm-srv
+

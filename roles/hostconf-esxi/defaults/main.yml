@@ -22,7 +22,7 @@ rename_datastores: true
 create_datastores: true
 
 # add those hosts to permitted host lists for forwarded keys
-permit_ssh_from: 192.168.0.*
+permit_ssh_from: 192.168.0.*,10.2.2.*
 
 # disable autostart for VMs not in autostart list
 autostart_only_listed: false
